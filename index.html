@@ -272,18 +272,21 @@
             border-radius: 8px;
             border-right: 4px solid var(--gold-primary);
             margin: 15px 0;
+            page-break-inside: avoid;
         }
 
         .latin-text {
             font-style: italic;
             color: var(--gold-light);
             margin-bottom: 5px;
+            page-break-inside: avoid;
         }
 
         .translation {
             color: var(--text-light);
             margin-bottom: 20px;
             font-size: 0.95rem;
+            page-break-inside: avoid;
         }
 
         .section-title {
@@ -294,6 +297,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            page-break-inside: avoid;
+        }
+
+        /* ATURAN PAGE BREAK PDF */
+        .pdf-page-break {
+            page-break-before: always;
+            margin-top: 30px;
         }
 
         /* PRINT STYLES */
@@ -319,6 +329,12 @@
             }
             .latin-text, .section-title, .khotbah-header h2 {
                 color: #000 !important;
+            }
+            #contentPertama, #contentKedua {
+                display: block !important;
+            }
+            #contentKedua {
+                page-break-before: always;
             }
         }
     </style>
@@ -400,35 +416,22 @@ const monthNames = [
     "Oktober (Sosial & Kedamaian)", "November (Sains & Ilmu)", "Desember (Muhasabah & Akhirat)"
 ];
 
-// Generator function untuk menghasilkan 52 judul beserta materi arab utuh
 function generate52Database() {
     const db = [];
     let globalIndex = 1;
 
     const baseTitles = [
-        // Bulan 1
         "Memperbarui Hakikat Syahadat di Era Modern", "Murni-nya Tauhid: Menjauhi Syirik Khofi", "Mengenal Allah Lewat Asmaul Husna", "Menjaga Keikhlasan Hati dari Riya'",
-        // Bulan 2
         "Hakikat Taubat Nasuha dan Istighfar", "Mengobati Penyakit Dengki (Hasad) dan Sombong", "Bahaya Lidah: Menjaga Lisan dari Fitnah", "Mengelola Amarah Menurut Petunjuk Nabi",
-        // Bulan 3
         "Berbakti kepada Kedua Orang Tua (Birrul Walidain)", "Mempererat Tali Silaturahmi Bertetangga", "Islam dan Sikap Toleransi (Tasamuh)", "Amanah dan Kejujuran dalam Bekerja",
-        // Bulan 4
         "Membangun Rumah Tangga Mawaddah Rahmah", "Tanggung Jawab Orang Tua di Era Digital", "Pemuda Islam: Meneladani Ashabul Kahfi", "Adab Berinteraksi dalam Muamalah",
-        // Bulan 5
         "Konsep Rezeki Berkah dalam Islam", "Bahaya Riba dan Keutamaan Transaksi Syariah", "Keutamaan Sedekah, Zakat, dan Wakaf", "Menjauhi Harta dan Makanan Haram",
-        // Bulan 6
         "Persiapan Ruhiyah Menyambut Ramadhan", "Meraih Derajat Taqwa Melalui Puasa", "Menggapai Kemuliaan Malam Lailatul Qadar", "Merawat Konsistensi Ibadah Pasca-Ramadhan",
-        // Bulan 7
         "Meneladani Ketauhidan Nabi Ibrahim AS", "Makna Hakiki Kurban Mengorbankan Nafsu", "Keutamaan 10 Hari Pertama Dzulhijjah", "Menjaga Kualitas Shalat Khusyu'",
-        // Bulan 8
         "Makna Hijrah Jiwa di Era Milenial", "Muhasabah Diri Sebelum Waktu Hisab", "Menghargai Waktu Sebagai Modal Utama", "Menghadapi Ujian dengan Sabar dan Ridha",
-        // Bulan 9
         "Keagungan Akhlak Rasulullah SAW", "Menjadikan Sunnah Nabi Sebagai Gaya Hidup", "Keutamaan Memperbanyak Shalawat", "Kepemimpinan Nabi: Cermin Keadilan",
-        // Bulan 10
         "Peran Umat Islam Menjaga Kedamaian Bangsa", "Islam dan Kelestarian Lingkungan Hidup", "Pentingnya Menjaga Keadilan dan Menolak Zalim", "Menumbuhkan Empati Kepada Sesama",
-        // Bulan 11
         "Kedudukan Ilmu dan Ulama dalam Islam", "Menjaga Kesehatan Fisik dan Mental", "Harmoni Iman, Ilmu, dan Teknologi", "Kebersihan Sebagian Dari Iman",
-        // Bulan 12
         "Mengingat Kematian (Zikrul Maut)", "Bekal Terbaik Menuju Alam Barzakh", "Gambaran Hari Kiamat dan Hari Pembalasan", "Mengenal Kenikmatan Surga dan Siksa Neraka", "Istiqamah Hingga Husnul Khatimah"
     ];
 
@@ -471,7 +474,6 @@ function generate52Database() {
 
 const khotbahDatabase = generate52Database();
 
-// === LOGIKA PARSING DAN RENDER APLIKASI ===
 function initDropdowns() {
     try {
         const selectBulan = document.getElementById('selectBulan');
@@ -586,20 +588,27 @@ function generatePdf() {
         const element = document.getElementById('printArea');
         const data = getCurrentKhotbah();
         
-        // Memastikan kedua tab tampil saat cetak/PDF
-        document.getElementById('contentPertama').style.display = 'block';
-        document.getElementById('contentKedua').style.display = 'block';
+        const contentP = document.getElementById('contentPertama');
+        const contentK = document.getElementById('contentKedua');
+
+        // Tampilkan kedua khotbah
+        contentP.style.display = 'block';
+        contentK.style.display = 'block';
+
+        // Tambahkan pembatas halaman estetis untuk Khotbah Kedua
+        contentK.classList.add('pdf-page-break');
 
         const opt = {
-            margin:       10,
+            margin:       [12, 12, 12, 12],
             filename:     `Khotbah_Jumat_Minggu_${data.minggu}_Bulan_${data.bulan}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
+            html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
         html2pdf().set(opt).from(element).save().then(() => {
-            // Reset tab ke tampilan awal setelah PDF dibuat
+            contentK.classList.remove('pdf-page-break');
             switchTab('pertama');
         });
     } catch (err) {
