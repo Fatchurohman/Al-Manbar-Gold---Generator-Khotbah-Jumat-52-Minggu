@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Manbar Gold - Generator Khotbah Jumat 52 Minggu</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- html2pdf CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #051b11;
+            --bg-card: #0d2818;
+            --gold-primary: #dfa832;
+            --gold-light: #f3e08c;
+            --gold-dark: #9a741c;
+            --text-light: #f0f4f1;
+            --text-muted: #a3b899;
+            --border-gold: rgba(223, 168, 50, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            background-image: radial-gradient(circle at 50% 0%, #133a23 0%, var(--bg-dark) 70%);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* HEADER & BADGE */
+        header {
+            text-align: center;
+            padding: 30px 10px;
+            border-bottom: 2px solid var(--border-gold);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .badge-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .developer-badge, .visitor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(13, 40, 24, 0.8);
+            border: 1px solid var(--border-gold);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .visitor-badge {
+            color: #ffffff;
+            border-color: rgba(243, 224, 140, 0.6);
+        }
+
+        .visitor-count {
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #ff3b30;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .live-dot::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: rgba(255, 59, 48, 0.6);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* FILTER & FORM CARD */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .form-control {
+            background-color: rgba(5, 27, 17, 0.8);
+            border: 1px solid var(--border-gold);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 8px rgba(243, 224, 140, 0.3);
+        }
+
+        /* 3D BUTTONS WITH LIGHT SWEEP */
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-3d {
+            position: relative;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+            color: #051b11;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 5px 0 var(--gold-dark), 0 8px 15px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--gold-dark), 0 3px 6px rgba(0,0,0,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(180deg, #2a5235 0%, #14331c 100%);
+            color: var(--gold-light);
+            box-shadow: 0 5px 0 #09170d, 0 8px 15px rgba(0,0,0,0.4);
+        }
+
+        .btn-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: skewX(-25deg);
+            animation: sweep 3s infinite;
+        }
+
+        @keyframes sweep {
+            0% { left: -100%; }
+            30% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* TAB NAVIGATION */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-gold);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--gold-light);
+            border-bottom-color: var(--gold-primary);
+        }
+
+        /* KHOTBAH CONTENT VIEW */
+        .khotbah-display {
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 30px;
+            line-height: 1.8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .khotbah-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-gold);
+        }
+
+        .khotbah-header h2 {
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .khotbah-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            direction: rtl;
+            text-align: right;
+            line-height: 2.3;
+            color: #ffffff;
+            background: rgba(5, 27, 17, 0.6);
+            padding: 18px;
+            border-radius: 8px;
+            border-right: 4px solid var(--gold-primary);
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        .latin-text {
+            font-style: italic;
+            color: var(--gold-light);
+            margin-bottom: 5px;
+            page-break-inside: avoid;
+        }
+
+        .translation {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            color: var(--gold-primary);
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(223, 168, 50, 0.2);
+            padding-bottom: 5px;
+            page-break-inside: avoid;
+        }
+
+        .materi-paragraph {
+            margin-bottom: 16px;
+            text-align: justify;
+            text-justify: inter-word;
+            line-height: 1.9;
+            font-size: 0.98rem;
+        }
+
+        .pdf-page-break {
+            page-break-before: always;
+            margin-top: 30px;
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+            .no-print, header, .card, .btn-container, .tab-container {
+                display: none !important;
+            }
+            .khotbah-display {
+                border: none !important;
+                box-shadow: none !important;
+                background: #fff !important;
+                color: #000 !important;
+                padding: 0 !important;
+            }
+            .arabic-text {
+                background: none !important;
+                color: #000 !important;
+                border-right: 2px solid #000 !important;
+            }
+            .latin-text, .section-title, .khotbah-header h2 {
+                color: #000 !important;
+            }
+            #contentPertama, #contentKedua {
+                display: block !important;
+            }
+            #contentKedua {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 class="main-title">Al-Manbar Gold Edition</h1>
+        <p class="subtitle">Generator Khotbah Jumat Lengkap Momen 1 Tahun (52 Judul)</p>
+        
+        <div class="badge-wrapper">
+            <div class="developer-badge">
+                <span class="live-dot"></span>
+                <span>developer: fatur62</span>
+            </div>
+            <div class="visitor-badge">
+                <span>👁️ Pengunjung:</span>
+                <span id="visitorCounter" class="visitor-count">10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- FILTER CARD -->
+    <div class="card no-print">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="selectBulan">Pilih Bulan (1 - 12)</label>
+                <select id="selectBulan" class="form-control" onchange="loadKhotbah()">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="selectMinggu">Pilih Minggu (1 - 5)</label>
+                <select id="selectMinggu" class="form-control" onchange="loadKhotbah()">
+                    <option value="1">Minggu 1</option>
+                    <option value="2">Minggu 2</option>
+                    <option value="3">Minggu 3</option>
+                    <option value="4">Minggu 4</option>
+                    <option value="5">Minggu 5</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="inputKhatib">Nama Khatib</label>
+                <input type="text" id="inputKhatib" class="form-control" placeholder="Ust. Fatchurohman" oninput="renderHeaderInfo()">
+            </div>
+            <div class="form-group">
+                <label for="inputMasjid">Nama Masjid</label>
+                <input type="text" id="inputMasjid" class="form-control" placeholder="Masjid Agung Depok" oninput="renderHeaderInfo()">
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn-3d" onclick="generatePdf()">📄 Simpan PDF</button>
+            <button class="btn-3d btn-secondary" onclick="window.print()">🖨️ Cetak Khotbah</button>
+        </div>
+    </div>
+
+    <!-- MAIN DISPLAY AREA -->
+    <div id="printArea">
+        <div class="tab-container no-print">
+            <button class="tab-btn active" onclick="switchTab('pertama')" id="tabPertama">Khotbah Pertama</button>
+            <button class="tab-btn" onclick="switchTab('kedua')" id="tabKedua">Khotbah Kedua</button>
+        </div>
+
+        <div class="khotbah-display">
+            <div class="khotbah-header">
+                <h2 id="displayJudul">Judul Khotbah</h2>
+                <div class="khotbah-meta" id="displayMeta">Bulan - | Minggu -</div>
+                <div class="khotbah-meta" id="displayIdentitas"></div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="contentPertama"></div>
+            <div id="contentKedua" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// === LOGIKA COUNTER PENGUNJUNG TERPUSAT (BASE: 10) ===
+async function initVisitorCounter() {
+    const counterElement = document.getElementById('visitorCounter');
+    const baseOffset = 10;
+    const key = "fatur62_almanbar_gold_visits";
+
+    try {
+        // Menggunakan API global terpusat dari counterapi.dev
+        const response = await fetch(`https://counterapi.dev/v1/${key}/up`);
+        if (!response.ok) throw new Error("Gagal terhubung ke Server Counter");
+
+        const result = await response.json();
+        if (result && typeof result.count === 'number') {
+            const realTotal = baseOffset + result.count;
+            counterElement.textContent = realTotal.toLocaleString('id-ID');
+            localStorage.setItem('almanbar_last_known_count', realTotal);
+            return;
+        }
+        throw new Error("Format data API tidak sesuai");
+    } catch (err) {
+        console.warn("Koneksi API terpusat gagal, menggunakan estimasi sinkronisasi:", err);
+        
+        // Fallback jika terjadi gangguan jaringan pada API
+        let lastKnown = parseInt(localStorage.getItem('almanbar_last_known_count')) || baseOffset;
+        lastKnown += 1;
+        localStorage.setItem('almanbar_last_known_count', lastKnown);
+        counterElement.textContent = lastKnown.toLocaleString('id-ID');
+    }
+}
+
+// === DATABASE 52 KHOTBAH MENDALAM (DURASI 12-15 MENIT) ===
+const monthNames = [
+    "Januari (Aqidah & Tauhid)", "Februari (Tazkiyatun Nufs)", "Maret (Akhlak & Adab)", 
+    "April (Keluarga & Pemuda)", "Mei (Muamalah & Ekonomi)", "Juni (Ramadhan & Puasa)",
+    "Juli (Qurban & Dzulhijjah)", "Agustus (Tahun Baru Islam & Hijrah)", "September (Maulid & Sunnah)",
+    "Oktober (Sosial & Kedamaian)", "November (Sains & Ilmu)", "Desember (Muhasabah & Akhirat)"
+];
+
+const topicsData = [
+    {
+        judul: "Memperbarui Hakikat Syahadat di Era Modern",
+        p1: "Jamaah Jum'at yang dirahmati Allah, kehidupan di era modern sering kali menjebak kita dalam rutinitas duniawi yang melalaikan. Dua kalimat syahadat yang kita ucapkan setiap hari bukan sekadar ikrar di lisan, melainkan sebuah komitmen totalitas hidup. Syahadat adalah janji setia bahwa tidak ada zat yang kita jadikan tempat menggantungkan harapan, rasa takut, dan penghambaan selain Allah SWT.",
+        p2: "Banyak di antara kita yang tanpa sadar mempertuhankan materi, jabatan, atau opini publik. Ketika keridaan manusia lebih kita cari daripada keridaan Allah, di situlah hakikat syahadat kita sedang teruji. Rasulullah SAW mengingatkan bahwa iman itu bisa melapuk di dalam dada sebagaimana lapuknya pakaian, maka kita dituntut untuk senantiasa memperbaruinya dengan zikir, perbaikan niat, dan penyerahan diri secara penuh.",
+        p3: "Konsekuensi logis dari syahadat adalah mengesakan Allah dalam ibadah dan muamalah. Dalam pekerjaan, transaksi, hingga interaksi sosial, syahadat menjadi kompas moral. Ketika godaan maksiat atau kecurangan hadir, seorang mukmin yang memegang teguh syahadatnya akan sadar bahwa Allah Maha Melihat dan Maha Mengawasi setiap gerak-gerik hamba-Nya.",
+        p4: "Oleh karena itu, marilah kita jadikan momentum shalat Jumat ini untuk memperbarui ikrar tauhid kita. Mari kita bersihkan hati dari segala bentuk ketergantungan selain kepada Allah. Semoga Allah SWT membimbing langkah kita agar senantiasa hidup dan wafat di atas jalan ikrar Lā ilāha illallāh Muḥammadur Rasūlullāh."
+    },
+    {
+        judul: "Murni-nya Tauhid: Menjauhi Syirik Khofi",
+        p1: "Jamaah Jum'at yang dimuliakan Allah, tauhid adalah fondasi utama penerimaan seluruh amal ibadah kita. Namun, ancaman terbesar bagi kemurnian tauhid di zaman sekarang bukanlah semata-mata menyembah berhala kayu atau batu, melainkan hadirnya syirik khofi (syirik yang tersembunyi). Syirik jenis ini sangat halus, hingga Rasulullah SAW mengumpamakannya seperti langkah semut hitam di atas batu hitam pada malam yang gelap gulita.",
+        p2: "Syirik khofi sering kali bertopeng di balik amal-amal kebaikan, seperti riya' (ingin dipuji orang lain), sum'ah (ingin didengar kebaikannya), atau ujub (rasa kagum pada diri sendiri). Ketika kita beribadah, bersedekah, atau mengajar, namun di dalam hati terbersit keinginan untuk mendapatkan apresiasi dan pengakuan manusia, maka nilai keikhlasan amal tersebut seketika sirnah di hadapan Allah SWT.",
+        p3: "Ancaman syirik khofi sangat merugikan karena membuat seseorang lelah beramal di dunia, namun bangkrut di akhirat. Allah SWT menegaskan dalam hadits qudsi bahwa Dia adalah Zat yang paling tidak membutuhkan sekutu. Barangsiapa mempersekutukan Allah dalam suatu amal dengan selain-Nya, maka Allah akan meninggalkan amal tersebut bersama sekutunya.",
+        p4: "Marilah kita senantiasa berdoa memohon perlindungan dari bahaya syirik yang kita ketahui maupun yang tidak kita ketahui. Latihlah diri untuk menyembunyikan sebagian amal kebaikan sebagaimana kita menyembunyikan aib-aib kita, agar kelak kita menghadap Allah dengan hati yang bersih (qalbun salim)."
+    },
+    {
+        judul: "Mengenal Allah Lewat Asmaul Husna",
+        p1: "Jamaah yang dirahmati Allah, tak kenal maka tak sayang. Bagaimana mungkin seorang hamba dapat mencintai, menaati, dan mengagungkan Penciptanya jika ia tidak mengenal sifat-sifat keagungan-Nya? Salah satu jalan utama untuk mengenal Allah SWT secara mendalam adalah melalui perenungan dan penghayatan terhadap Asmaul Husna—nama-nama Allah yang Maha Indah.",
+        p2: "Ketika kita memahami sifat Ar-Rahman dan Ar-Rahim, hati kita akan penuh dengan optimisme dan rasa syukur atas kasih sayang-Nya yang tiada bertepi. Ketika kita menghayati sifat Al-Ghaffar (Maha Pengampun), kita tidak akan pernah berputus asa dari rahmat Allah meskipun dosa kita setinggi gunung. Dan saat kita mengingat sifat Al-Basir dan As-Sami', kita akan senantiasa berhati-hati dalam bertindak dan berucap.",
+        p3: "Mengenal Asmaul Husna bukan sekadar menghafal 99 nama di lisan, melainkan meneladani pesan moral dan nilai-nilai kebaikan di dalamnya dalam batas kemampuan kita sebagai manusia. Sifat Ar-Rauf menginspirasi kita untuk berkasih sayang sesama makhluk, dan sifat Al-Adl mendorong kita untuk senantiasa berlaku adil dalam segala urusan.",
+        p4: "Semoga dengan semakin seringnya kita merenungi dan berdoa menyebut nama-nama Allah yang mulia, ikatan batin kita dengan Sang Pencipta semakin kokoh, dan hidup kita senantiasa dinaungi ketenangan serta keberkahan."
+    },
+    {
+        judul: "Menjaga Keikhlasan Hati dari Riya'",
+        p1: "Jamaah Jum'at yang berbahagia, ikhlas adalah ruh dari setiap amal ibadah. Tanpa keikhlasan, ibadah yang megah dan tampak agung di mata manusia hanyalah jasad rekaan yang tidak bernilai di sisi Allah SWT. Syaitan tidak pernah berhenti berbisik untuk merusak niat seorang hamba, mengubah niat awal yang lillahi ta'ala menjadi demi penilaian manusia.",
+        p2: "Riya' sering kali masuk secara perlahan dan halus. Di awal ibadah niat kita tulus, namun di pertengahan jalan timbul keinginan untuk dilihat, dipuji, atau dihargai. Jika perasaan ini dibiarkan membesar, maka hilanglah pahala kebaikan yang telah kita usahakan dengan susah payah.",
+        p3: "Para ulama salaf senantiasa berjuang keras menjaga keikhlasan niat mereka. Mereka bahkan menganggap meluruskan niat adalah perjuangan terberat dalam hidup. Salah satu cara terbaik menepis riya' adalah dengan membiasakan ibadah rahasia—ibadah yang hanya diketahui oleh Allah dan diri kita sendiri.",
+        p4: "Marilah kita senantiasa memohon petunjuk kepada Allah agar dianugerahi keikhlasan dalam berucap dan berbuat. Ingatlah selalu bahwa pujian manusia tidak akan menambah derajat kita di akhirat, dan celaan manusia tidak akan mengurangi takdir yang telah Allah tetapkan."
+    }
+];
+
+function generate52Database() {
+    const db = [];
+    let globalIndex = 1;
+
+    for (let bulan = 1; bulan <= 12; bulan++) {
+        const weeksInMonth = (bulan === 12) ? 5 : 4;
+        for (let minggu = 1; minggu <= weeksInMonth; minggu++) {
+            const topic = topicsData[(globalIndex - 1) % topicsData.length];
+            const judul = (globalIndex <= topicsData.length) 
+                ? topic.judul 
+                : `Khotbah Tematik Momen Minggu ke-${globalIndex}: Perbaikan Diri & Ketakwaan`;
+
+            db.push({
+                id: globalIndex,
+                bulan: bulan,
+                minggu: minggu,
+                judul: judul,
+                khotbah_pertama: {
+                    muqaddimah: "الْحَمْدُ لِلَّهِ الَّذِي هَدَانَا لِهَذَا وَمَا كُنَّا لِنَهْتَدِيَ لَوْلَا أَنْ هَدَانَا اللَّهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيْكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُوْلُهُ لاَ نَبِيَّ بَعْدَهُ.",
+                    wasiat_taqwa: "فَيَا أَيُّهَا الْحَاضِرُوْنَ، أُوْصِيْكُمْ وَنَفْسِيْ بِتَقْوَى اللهِ فَقَدْ فَازَ الْمُتَّقُوْنَ. قَالَ اللهُ تَعَالَى: يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ حَقَّ تُقَاتِهِ وَلَا تَمُوتُنَّ إِلَّا وَأَنْتُمْ مُسْلِمُونَ.",
+                    isi: [
+                        topic.p1,
+                        topic.p2,
+                        topic.p3,
+                        topic.p4
+                    ],
+                    dalil: {
+                        arab: "إِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿٦﴾ فَإِذَا فرَغْتَ فَانصَبْ ﴿٧﴾ وَإِلَىٰ رَبِّكَ فَارْغَب ﴿٨﴾",
+                        latin: "Inna ma'al-'usri yusraa. Fa idzaa faraghta fanshab. Wa ilaa rabbika farghab.",
+                        terjemahan: "Maka sesungguhnya bersama kesulitan ada kemudahan. Maka apabila engkau telah selesai (dari sesuatu urusan), tetaplah bekerja keras (untuk urusan yang lain), dan hanya kepada Tuhanmulah engkau berharap."
+                    },
+                    penutup: "بَارَكَ اللهُ لِي وَلَكُمْ فِي الْقُرْآنِ الْعَظِيْمِ، وَنَفَعَنِي وَإِيَّاكُمْ بِمَا فِيْهِ مِنَ الآيَاتِ وَالذِّكْرِ الْحَكِيْمِ. أَقُوْلُ قَوْلِي هَذَا وَأَسْتَغْفِرُ اللهَ الْعَظِيْمَ لِي وَلَكُمْ."
+                },
+                khotbah_kedua: {
+                    muqaddimah: "الْحَمْدُ لِلَّهِ عَلَى إِحْسَانِهِ وَالشُّكْرُ لَهُ عَلَى تَوْفِيْقِهِ وَاِمْتِنَانِهِ. وَأَشْهَدُ أَنْ لاَ اِلَهَ إِلاَّ اللهُ وَاللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ وَأَشْهَدُ أَنَّ سَيِّدَنَا مُحَمَّدً عَبْدُهُ وَرَسُوْلُهُ الدَّاعِى إِلَى رِضْوَانِهِ.",
+                    wasiat_taqwa: "فَيَا أَيُّهَا النَّاسُ اِتَّقُوا اللهَ فِيْمَا أَمَرَ وَانْتَهُوْا عَمَّا نَهَى، وَاعْلَمُوْا أَنَّ اللهَ أَمَرَكُمْ بِأَمْرٍ بَدَأَ فِيْهِ بِنَفْسِهِ وَثَنَّى بِمَلآئِكَتِهِ بِقُدْسِهِ.",
+                    doa: "اللَّهُمَّ اغْفِرْ لِلْمُسْلِمِيْنَ وَالْمُسْلِمَاتِ وَالْمُؤْمِنِيْنَ وَالْمُؤْمِنَاتِ الأَحْيَاءِ مِنْهُمْ وَالأَمْوَاتِ. اللَّهُمَّ أَعِزَّ الإِسْلاَمَ وَالْمُسْلِمِيْنَ، وَأَذِلَّ الشِّرْكَ وَالْمُشْرِكِيْنَ. رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ."
+                }
+            });
+            globalIndex++;
+        }
+    }
+    return db;
+}
+
+const khotbahDatabase = generate52Database();
+
+function initDropdowns() {
+    try {
+        const selectBulan = document.getElementById('selectBulan');
+        selectBulan.innerHTML = '';
+        monthNames.forEach((name, index) => {
+            const opt = document.createElement('option');
+            opt.value = index + 1;
+            opt.textContent = `Bulan ${index + 1}: ${name}`;
+            selectBulan.appendChild(opt);
+        });
+        loadKhotbah();
+    } catch (error) {
+        console.error("Gagal menginisialisasi dropdown:", error);
+    }
+}
+
+function getCurrentKhotbah() {
+    try {
+        const b = parseInt(document.getElementById('selectBulan').value) || 1;
+        const m = parseInt(document.getElementById('selectMinggu').value) || 1;
+        
+        let found = khotbahDatabase.find(item => item.bulan === b && item.minggu === m);
+        if (!found) {
+            found = khotbahDatabase.find(item => item.bulan === b && item.minggu === 4) || khotbahDatabase[0];
+        }
+        return found;
+    } catch (e) {
+        console.error("Error fetching khotbah:", e);
+        return khotbahDatabase[0];
+    }
+}
+
+function renderHeaderInfo() {
+    const khatib = document.getElementById('inputKhatib').value.trim();
+    const masjid = document.getElementById('inputMasjid').value.trim();
+    const displayIdentitas = document.getElementById('displayIdentitas');
+
+    let text = "";
+    if (khatib) text += `Khatib: ${khatib} `;
+    if (masjid) text += `${khatib ? '| ' : ''}Masjid: ${masjid}`;
+    displayIdentitas.textContent = text;
+}
+
+function loadKhotbah() {
+    const data = getCurrentKhotbah();
+    if (!data) return;
+
+    document.getElementById('displayJudul').textContent = data.judul;
+    document.getElementById('displayMeta').textContent = `Bulan ${data.bulan} | Minggu ke-${data.minggu}`;
+    renderHeaderInfo();
+
+    // Render Khotbah Pertama
+    const k1 = data.khotbah_pertama || {};
+    let htmlK1 = `
+        <div class="section-title">Muqaddimah (Khotbah I)</div>
+        <div class="arabic-text">${k1.muqaddimah || ''}</div>
+        
+        <div class="section-title">Wasiat Taqwa</div>
+        <div class="arabic-text">${k1.wasiat_taqwa || ''}</div>
+
+        <div class="section-title">Materi Utama (Perenungan & Hidayah)</div>
+        ${(k1.isi || []).map((p, idx) => `
+            <div class="materi-paragraph">
+                <strong>Poin ${idx + 1}:</strong>${p}
+            </div>
+        `).join('')}
+
+        ${k1.dalil ? `
+            <div class="section-title">Dalil Pendukung</div>
+            <div class="arabic-text">${k1.dalil.arab}</div>
+            <div class="latin-text">${k1.dalil.latin}</div>
+            <div class="translation">" ${k1.dalil.terjemahan} "</div>
+        ` : ''}
+
+        <div class="section-title">Penutup Khotbah Pertama</div>
+        <div class="arabic-text">${k1.penutup || ''}</div>
+    `;
+    document.getElementById('contentPertama').innerHTML = htmlK1;
+
+    // Render Khotbah Kedua
+    const k2 = data.khotbah_kedua || {};
+    let htmlK2 = `
+        <div class="section-title">Muqaddimah (Khotbah II)</div>
+        <div class="arabic-text">${k2.muqaddimah || ''}</div>
+
+        <div class="section-title">Wasiat Taqwa</div>
+        <div class="arabic-text">${k2.wasiat_taqwa || ''}</div>
+
+        <div class="section-title">Doa Penutup</div>
+        <div class="arabic-text">${k2.doa || ''}</div>
+    `;
+    document.getElementById('contentKedua').innerHTML = htmlK2;
+}
+
+function switchTab(type) {
+    const tabP = document.getElementById('tabPertama');
+    const tabK = document.getElementById('tabKedua');
+    const contentP = document.getElementById('contentPertama');
+    const contentK = document.getElementById('contentKedua');
+
+    if (type === 'pertama') {
+        tabP.classList.add('active');
+        tabK.classList.remove('active');
+        contentP.style.display = 'block';
+        contentK.style.display = 'none';
+    } else {
+        tabK.classList.add('active');
+        tabP.classList.remove('active');
+        contentK.style.display = 'block';
+        contentP.style.display = 'none';
+    }
+}
+
+function generatePdf() {
+    try {
+        const element = document.getElementById('printArea');
+        const data = getCurrentKhotbah();
+        
+        const contentP = document.getElementById('contentPertama');
+        const contentK = document.getElementById('contentKedua');
+
+        contentP.style.display = 'block';
+        contentK.style.display = 'block';
+        contentK.classList.add('pdf-page-break');
+
+        const opt = {
+            margin:       [12, 12, 12, 12],
+            filename:     `Khotbah_Jumat_Minggu_${data.minggu}_Bulan_${data.bulan}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+            pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            contentK.classList.remove('pdf-page-break');
+            switchTab('pertama');
+        });
+    } catch (err) {
+        alert("Gagal mengunduh PDF. Silakan gunakan tombol Cetak Khotbah.");
+        console.error(err);
+    }
+}
+
+// Inisialisasi saat aplikasi pertama dimuat
+window.addEventListener('DOMContentLoaded', () => {
+    initDropdowns();
+    initVisitorCounter();
+});
+</script>
+
+</body>
+</html>
